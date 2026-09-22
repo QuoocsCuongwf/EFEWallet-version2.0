@@ -1,0 +1,33 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+
+package com.QuoocsCuongwf.EFEWallet.WalletService.grpc;
+
+service WalletService{
+  rpc Generation(GenReq) returns (GenRes);
+  rpc Balance(BalReq) returns (BalRes);
+}
+
+message GenReq {
+  string userId = 1;
+}
+
+message  GenRes {
+  string user_id = 1;
+  string wallet_id = 2;
+  string wallet_address = 3;
+  string status = 4;
+  string balance = 5;
+  google.protobuf.Timestamp create_at = 6;
+}
+
+message BalReq {
+  string walletId = 1;
+}
+
+message BalRes {
+  string balance = 1;
+  google.protobuf.Timestamp time = 2;
+}

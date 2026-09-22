@@ -1,0 +1,56 @@
+services:
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: wallet_auth_db
+      POSTGRES_USER: wallet
+      POSTGRES_PASSWORD: wallet123
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wallet -d wallet_auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  transaction-db:
+    image: postgres:15-alpine
+    container_name: transaction-db
+    environment:
+      POSTGRES_DB: wallet_transaction_db
+      POSTGRES_USER: wallet
+      POSTGRES_PASSWORD: wallet123
+    ports:
+      - "5434:5432"
+    volumes:
+      - transaction_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wallet -d wallet_transaction_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wallet-db:
+    image: postgres:15-alpine
+    container_name: wallet-db
+    environment:
+      POSTGRES_DB: wallet_service_db
+      POSTGRES_USER: wallet
+      POSTGRES_PASSWORD: wallet123
+    ports:
+      - "5435:5432"
+    volumes:
+      - wallet_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wallet -d wallet_service_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  auth_db_data:
+  transaction_db_data:
+  wallet_db_data:

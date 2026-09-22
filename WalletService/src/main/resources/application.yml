@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: WalletService
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5435/wallet_service_db}
+    username: ${DB_USERNAME:wallet}
+    password: ${DB_PASSWORD:wallet123}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update   # dev: update | prod: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: ${REDIS_TIMEOUT:2s}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: wallet-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+  grpc:
+    server:
+      port: ${GRPC_PORT:9090}
+    client:
+      wallet-service:
+        address: static://localhost:9091
+        negotiation-type: plaintext
+server:
+  port: ${SERVER_PORT:8084}
+
+jwt:
+  secret: ${JWT_SECRET:QuoocsCuongwf_EFEWalletProject_AuthService_SecretKey_ChangeThisToAtLeast64BytesLong}
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:QuoocsCuongwf_EFEWalletProject_AuthService_SecretKey_ChangeThisToAtLeast64BytesLong}
+      expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+    internal-secret-key: "EFEWallet_Super_Secret_Key_For_Internal_Microservices_2026@!"
+
+redis:
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

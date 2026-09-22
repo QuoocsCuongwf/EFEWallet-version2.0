@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: wallet-auth-db
+    ports:
+      - "${DB_PORT_HOST}:5432" # Map 5433 (ngoài) vào 5432 (trong)
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+
+  auth-service:
+    build: .
+    container_name: auth-service
+    ports:
+      - "8083:8083"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432 # App Java gọi DB qua cổng nội bộ này
+    depends_on:
+      - postgres
+
+volumes:
+  auth_db_data:

@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.QuoocsCuongwf.EFEWallet.AuthService.grpc;
+service AuthService {
+  rpc verify (VerifyTokenRequest) returns (VerifyTokenResponse);
+}
+message VerifyTokenRequest {
+  string userId = 1;
+  string token = 2;
+}
+message VerifyTokenResponse {
+  bool isValid = 1;
+  string message = 2;
+}
